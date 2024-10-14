@@ -11,14 +11,14 @@
 UENUM(BlueprintType)
 enum FaceDirection
 {
-	F_UP      UMETA(DisplayName = "UP"),
-	F_DOWN UMETA(DisplayName = "DOWN"),
-	F_LEFT   UMETA(DisplayName = "LEFT"),
-	F_RIGHT   UMETA(DisplayName = "RIGHT"),
-	F_LEFTUP   UMETA(DisplayName = "LEFTUP"),
-	F_LEFTDOWN   UMETA(DisplayName = "LEFTDOWN"),
-	F_RIGHTUP   UMETA(DisplayName = "RIGHTUP"),
-	F_RIGHTDOWN   UMETA(DisplayName = "RIGHTDOWN")
+	F_UP		UMETA(DisplayName = "UP"),
+	F_DOWN		UMETA(DisplayName = "DOWN"),
+	F_LEFT		UMETA(DisplayName = "LEFT"),
+	F_RIGHT		UMETA(DisplayName = "RIGHT"),
+	F_LEFTUP	UMETA(DisplayName = "LEFTUP"),
+	F_LEFTDOWN	UMETA(DisplayName = "LEFTDOWN"),
+	F_RIGHTUP	UMETA(DisplayName = "RIGHTUP"),
+	F_RIGHTDOWN	UMETA(DisplayName = "RIGHTDOWN")
 };
 
 UCLASS()
@@ -33,6 +33,9 @@ public:
 	TEnumAsByte<FaceDirection> Facing = FaceDirection::F_DOWN;
 	UPROPERTY(BlueprintReadOnly, Category = "State")
 	float Velocity = 0.0f;
+
+	FaceDirection Vec2ToFaceDirection(FVector2D Vec2);
+	FVector2D FaceDirectionToVec2(FaceDirection FaceDir);
 
 protected:
 	virtual void BeginPlay() override;
