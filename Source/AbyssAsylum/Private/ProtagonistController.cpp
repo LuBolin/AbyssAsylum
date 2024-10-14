@@ -8,6 +8,7 @@
 #include <EnhancedInputSubsystems.h>
 #include "InputAction.h"
 #include "InputMappingContext.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 void AProtagonistController::OnPossess(APawn* aPawn)
 {
@@ -29,10 +30,17 @@ void AProtagonistController::OnPossess(APawn* aPawn)
 	InputSubsystem->AddMappingContext(InputMappingContext, 0);
 	
 	if (ActionMove)
+	{
 		EnhancedInputComponent->BindAction(ActionMove,
 			ETriggerEvent::Triggered, this, &AProtagonistController::MoveCallback);
-	EnhancedInputComponent->BindAction(ActionMove,
-			ETriggerEvent::Completed, this, &AProtagonistController::MoveCleanUp);
+		EnhancedInputComponent->BindAction(ActionMove,
+				ETriggerEvent::Completed, this, &AProtagonistController::MoveCleanUp);
+	}
+	if (ActionDash)
+    {
+        EnhancedInputComponent->BindAction(ActionDash,
+            ETriggerEvent::Started, this, &AProtagonistController::DashCallback);
+    }
 }
 
 void AProtagonistController::OnUnPossess()
@@ -42,33 +50,39 @@ void AProtagonistController::OnUnPossess()
 	Super::OnUnPossess();
 }
 
+void AProtagonistController::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+	
+	if (DashTimer > 0.0f)
+	{
+		FVector DashVector = DashDirection * DashSpeed;
+		Protagonist->GetCharacterMovement()->MoveSmooth(DashVector, DeltaTime);
+		DashTimer -= DeltaTime;
+	} else {
+		dashing = false;
+	}
+
+	if (DashCooldownTimer > 0.0f)
+		DashCooldownTimer -= DeltaTime;
+}
+
 void AProtagonistController::MoveCallback(const FInputActionInstance& Instance)
 {
+	if (dashing)
+		return;
+	
 	FVector2D InputValue = Instance.GetValue().Get<FVector2D>();
 
-	if (InputValue == FVector2D(0.0f, -1.0f))
-		Protagonist->Facing = FaceDirection::F_UP;
-	else if (InputValue == FVector2D(0.0f, 1.0f))
-		Protagonist->Facing = FaceDirection::F_DOWN;
-	else if (InputValue == FVector2D(-1.0f, 0.0f))
-		Protagonist->Facing = FaceDirection::F_LEFT;
-	else if (InputValue == FVector2D(1.0f, 0.0f))
-		Protagonist->Facing = FaceDirection::F_RIGHT;
-	else if (InputValue == FVector2D(-1.0f, -1.0f))
-		Protagonist->Facing = FaceDirection::F_LEFTUP;
-	else if (InputValue == FVector2D(-1.0f, 1.0f))
-		Protagonist->Facing = FaceDirection::F_LEFTDOWN;
-	else if (InputValue == FVector2D(1.0f, -1.0f))
-		Protagonist->Facing = FaceDirection::F_RIGHTUP;
-	else if (InputValue == FVector2D(1.0f, 1.0f))
-		Protagonist->Facing = FaceDirection::F_RIGHTDOWN;
-
+	Protagonist->Facing = Protagonist->Vec2ToFaceDirection(InputValue);
+	
 	InputValue.Normalize();
 	print(InputValue.ToString());
 	
 	float DeltaTime = GetWorld()->GetDeltaSeconds();
 	float DistToMove = MaxSpeed * DeltaTime;
-	InputValue *= DistToMove;
+	// InputValue *= DistToMove;
+	InputValue *= MaxSpeed;
 	
 	// Use X and Y for your logic
 	const float X = InputValue.X;
@@ -76,8 +90,10 @@ void AProtagonistController::MoveCallback(const FInputActionInstance& Instance)
 
 	if (Protagonist)
 	{
-		Protagonist->AddMovementInput(PositiveX, X);
-		Protagonist->AddMovementInput(PositiveY, Y);
+		// Protagonist->AddMovementInput(PositiveX, X);
+		// Protagonist->AddMovementInput(PositiveY, Y);
+		FVector MovementVector = FVector(X, Y, 0.0f);
+		Protagonist->GetCharacterMovement()->MoveSmooth(MovementVector, DeltaTime);
 	}
 
 	Protagonist->Velocity = InputValue.Size();
@@ -86,4 +102,20 @@ void AProtagonistController::MoveCallback(const FInputActionInstance& Instance)
 void AProtagonistController::MoveCleanUp(const FInputActionInstance& Instance)
 {
 	Protagonist->Velocity = 0.0f;
+}
+
+void AProtagonistController::DashCallback(const FInputActionInstance& Instance)
+{
+	if (dashing)
+		return;
+	
+	if (DashTimer <= 0.0f)
+	{
+		dashing = true;
+		DashTimer = DashDuration;
+		DashCooldownTimer = DashCooldown;
+		FVector2D DashDirection2D = Protagonist->FaceDirectionToVec2(Protagonist->Facing);
+		DashDirection2D.Normalize();
+		DashDirection = FVector(DashDirection2D.X, DashDirection2D.Y, 0.0f);
+	}
 }
