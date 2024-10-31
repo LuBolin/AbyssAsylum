@@ -1,0 +1,55 @@
+[gd_scene load_steps=10 format=3 uid="uid://pnt4ou8vr621"]
+
+[ext_resource type="Script" path="res://player/player.gd" id="1_yjjpv"]
+[ext_resource type="Script" path="res://player/state_machine/idle_state.gd" id="2_61d8v"]
+[ext_resource type="Script" path="res://player/state_machine/state_machine.gd" id="3_4updl"]
+[ext_resource type="SpriteFrames" uid="uid://dn4aaq0cm5e74" path="res://player/player_sprite_frames.tres" id="3_uutjt"]
+[ext_resource type="Script" path="res://player/state_machine/run_state.gd" id="5_8nb71"]
+[ext_resource type="Script" path="res://player/roll_state.gd" id="6_iwlew"]
+[ext_resource type="Script" path="res://player/state_machine/attack_state.gd" id="7_l71oa"]
+[ext_resource type="PackedScene" uid="uid://dk4sn026voprj" path="res://player/weapons/cleaver.tscn" id="8_jwugt"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_ewihn"]
+radius = 30.0
+
+[node name="Player" type="CharacterBody2D"]
+motion_mode = 1
+script = ExtResource("1_yjjpv")
+
+[node name="FlipWrapper" type="Node2D" parent="."]
+
+[node name="Animator" type="AnimatedSprite2D" parent="FlipWrapper"]
+unique_name_in_owner = true
+position = Vector2(0, -46)
+scale = Vector2(0.1, 0.1)
+sprite_frames = ExtResource("3_uutjt")
+animation = &"Idle"
+autoplay = "Idle"
+
+[node name="Weapon" type="Node2D" parent="FlipWrapper"]
+unique_name_in_owner = true
+position = Vector2(19, 17)
+
+[node name="Cleaver" parent="FlipWrapper/Weapon" instance=ExtResource("8_jwugt")]
+
+[node name="Collider" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_ewihn")
+
+[node name="FollowCamera" type="Camera2D" parent="."]
+
+[node name="StateMachine" type="Node2D" parent="."]
+script = ExtResource("3_4updl")
+
+[node name="Idle" type="Node" parent="StateMachine"]
+script = ExtResource("2_61d8v")
+
+[node name="Run" type="Node" parent="StateMachine"]
+script = ExtResource("5_8nb71")
+
+[node name="Roll" type="Node" parent="StateMachine"]
+script = ExtResource("6_iwlew")
+
+[node name="Death" type="Node" parent="StateMachine"]
+
+[node name="Attack" type="Node" parent="StateMachine"]
+script = ExtResource("7_l71oa")
