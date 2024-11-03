@@ -1,0 +1,23 @@
+[gd_scene load_steps=5 format=3 uid="uid://cl5cp31dngsbk"]
+
+[ext_resource type="SpriteFrames" uid="uid://dyi5r0pb5gel" path="res://bosses/eating_disorder/eating_disorder_sprite_frames.tres" id="1_1jyrk"]
+[ext_resource type="Script" path="res://bosses/eating_disorder/eating_disorder.gd" id="1_koj0c"]
+[ext_resource type="PackedScene" uid="uid://3jub6wqdxx6h" path="res://bosses/boss_utils.tscn" id="3_4sotq"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_ngr50"]
+radius = 64.0
+
+[node name="EatingDisorder" type="CharacterBody2D"]
+collision_mask = 3
+script = ExtResource("1_koj0c")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_ngr50")
+
+[node name="Animator" type="AnimatedSprite2D" parent="."]
+scale = Vector2(8, 8)
+sprite_frames = ExtResource("1_1jyrk")
+autoplay = "default"
+frame_progress = 0.129603
+
+[node name="BossUtils" parent="." instance=ExtResource("3_4sotq")]

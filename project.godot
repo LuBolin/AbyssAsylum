@@ -11,13 +11,18 @@ config_version=5
 [application]
 
 config/name="AbyssAsylum"
-run/main_scene="res://scenes/sandbox.tscn"
+run/main_scene="res://scenes/eating_disorder_room.tscn"
 config/features=PackedStringArray("4.3", "Mobile")
 config/icon="res://resources/icon.png"
 
 [autoload]
 
 Global="*res://global.gd"
+
+[layer_names]
+
+2d_physics/layer_1="Full Collision"
+2d_physics/layer_2="Pick Ups"
 
 [rendering]
 
