@@ -134,6 +134,7 @@ height = 80.0
 
 [node name="SlimeOctopus" type="CharacterBody2D"]
 script = ExtResource("1_0s2jb")
+root_motion_offset = 120.0
 
 [node name="Sprite" type="Sprite2D" parent="."]
 position = Vector2(0, -20)

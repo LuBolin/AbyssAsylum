@@ -19,6 +19,7 @@ func _ready() -> void:
 
 func _on_hit(_source, _damage):
 	# if dmg > 0: transition to hit state
+	# print("Hit by " + str(source) + " for " + str(damage))
 	pass
 
 func get_aim() -> Vector2:
@@ -44,3 +45,9 @@ func _physics_process(delta: float) -> void:
 	
 	if roll_cd_left > 0:
 		roll_cd_left -= delta
+
+
+func _on_hurt_box_body_entered(body: Node2D) -> void:
+	if 'damage' in body:
+		var dmg = body.get('damage')
+		hit.emit(body, dmg)

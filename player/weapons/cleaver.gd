@@ -9,6 +9,8 @@ func _ready() -> void:
 func _on_body_hit(body: Node2D):
 	if body is Player:
 		pass
-	if body is BaseBoss:
-		print("Hit: " + body.name)
-		body.hit()
+	#if body is BaseBoss:
+		#print("Hit: " + body.name)
+		#body.hit()
+	if "boss_utils" in body:
+		body.get("boss_utils").hit()

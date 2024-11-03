@@ -13,6 +13,7 @@ var been_hit: bool = false
 @onready var animator: AnimationPlayer = $Animator
 @onready var sprite: Sprite2D = $Sprite
 
+var damage = 1
 
 func _ready() -> void:
 	animator.animation_finished.connect(_anim_cleanup)

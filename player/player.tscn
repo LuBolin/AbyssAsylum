@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://pnt4ou8vr621"]
+[gd_scene load_steps=11 format=3 uid="uid://pnt4ou8vr621"]
 
 [ext_resource type="Script" path="res://player/player.gd" id="1_yjjpv"]
 [ext_resource type="Script" path="res://player/state_machine/idle_state.gd" id="2_61d8v"]
@@ -11,6 +11,9 @@
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_ewihn"]
 radius = 30.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_73utm"]
+radius = 29.8329
 
 [node name="Player" type="CharacterBody2D"]
 motion_mode = 1
@@ -53,3 +56,10 @@ script = ExtResource("6_iwlew")
 
 [node name="Attack" type="Node" parent="StateMachine"]
 script = ExtResource("7_l71oa")
+
+[node name="HurtBox" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HurtBox"]
+shape = SubResource("CircleShape2D_73utm")
+
+[connection signal="body_entered" from="HurtBox" to="." method="_on_hurt_box_body_entered"]
