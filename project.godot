@@ -21,8 +21,10 @@ Global="*res://global.gd"
 
 [layer_names]
 
-2d_physics/layer_1="Full Collision"
-2d_physics/layer_2="Pick Ups"
+2d_physics/layer_1="Terrain"
+2d_physics/layer_2="Boss"
+2d_physics/layer_3="Player"
+2d_physics/layer_4="Boss interactables"
 
 [rendering]
 
