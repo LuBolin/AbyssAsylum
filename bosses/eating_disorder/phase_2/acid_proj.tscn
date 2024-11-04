@@ -1,0 +1,19 @@
+[gd_scene load_steps=4 format=3 uid="uid://cat3jv3o0ie07"]
+
+[ext_resource type="Script" path="res://bosses/eating_disorder/phase_2/acid_proj.gd" id="1_dfvjf"]
+[ext_resource type="Texture2D" uid="uid://cuw676va3l3cd" path="res://resources/SnoopethThings/13.png" id="2_t7y3r"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_hqlwr"]
+radius = 32.0
+
+[node name="AcidProj" type="CharacterBody2D"]
+collision_layer = 0
+collision_mask = 4
+script = ExtResource("1_dfvjf")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_hqlwr")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+scale = Vector2(3.355, 3.355)
+texture = ExtResource("2_t7y3r")
